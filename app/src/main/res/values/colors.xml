@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#0e2ac7</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="wait_color">#FF4081</color>
+    <color name="corner_color">#000000</color>
+    <color name="border_color">#7c0b84</color>
+
+    <color name="failure_color">#840b0d</color>
+    <color name="retry_color">#0b840d</color>
+    <color name="progress_color">#0b8484</color>
+</resources>
