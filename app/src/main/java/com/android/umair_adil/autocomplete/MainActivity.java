@@ -43,13 +43,18 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     private String TAG = MainActivity.class.getSimpleName();
     Context context;
+
+    //UI
     Button addressButton;
-    TextView latLongTV;
+    TextView latLong;
     AutoCompleteTextView text;
-    List<String> suggestions;
+
+    //Volley
     RequestQueue queue;
-    String url;
+
+    //Simple Cursor Adapter
     CursorAdapter suggestionAdapter;
+    List<String> suggestions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,8 +67,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         text.setOnItemSelectedListener(this);
         text.setOnItemClickListener(this);
 
-        latLongTV = (TextView) findViewById(R.id.latLongTV);
-
+        latLong = (TextView) findViewById(R.id.latLongTV);
         addressButton = (Button) findViewById(R.id.addressButton);
         addressButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,11 +84,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         text.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (count != 0) {
 
-                } else {
-
-                }
             }
 
             @Override
@@ -118,9 +118,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-        text.setText(suggestionAdapter.getItem(arg2).toString());
+        text.setText(suggestions.get(arg2));
         GeocodingLocation locationAddress = new GeocodingLocation();
-        locationAddress.getAddressFromLocation(suggestionAdapter.getItem(arg2).toString(),
+        locationAddress.getAddressFromLocation(suggestions.get(arg2),
                 getApplicationContext(), new GeocoderHandler());
 
     }
@@ -137,13 +137,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 default:
                     locationAddress = null;
             }
-            latLongTV.setText(locationAddress);
+            latLong.setText(locationAddress);
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the options menu from XML
+
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.menu_search));
@@ -166,6 +166,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             public boolean onSuggestionClick(int position) {
                 searchView.setQuery(suggestions.get(position), false);
                 searchView.clearFocus();
+                GeocodingLocation locationAddress = new GeocodingLocation();
+                locationAddress.getAddressFromLocation(suggestions.get(position),
+                        getApplicationContext(), new GeocoderHandler());
                 return true;
             }
         });
@@ -194,7 +197,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     @Override
                     public void onResponse(String response) {
                         //Log.i(TAG, "Response: " + response);
-
                         suggestions.clear();
                         try {
                             JsonElement jelement = new JsonParser().parse(response);
